@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal: "index"}) %>
+    </header>
+    <body>
+        <div >
+            <div>
+                <% if(siker){ %>
+                    <p class="fade-out siker">Sikeres bejelentkezés!</p>
+                <% } %>
+            <p style="font-size:5vw; text-align: center;">Üdv a weboldalon!</p>
+            <p><%- email %></p>
+            <p><%- role %></p>
+            </div>
+        </div>
+
+    </body>
+    <%- include('assets/footer') %>
+</html>

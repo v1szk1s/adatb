@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <body>
+        <div class="center p-4">
+            <form class="form text-center" action="/login" method="post">
+                <label>E-mail:
+                    <input type="text" class="form-control" name="email" >
+                </label><br>
+                <label>Jelszó:
+                    <input type="password" class="form-control" name="jelszo" >
+                </label><br>
+                <input class="gomb mt-2" type="submit" value="Bejelentkezés">
+            </form>
+
+            <% for(let i = 0; i < hibak.length; i++){ %>
+            <p> <%- hibak[i] %> </p> 
+            <% } %>
+        </div>
+    </body>
+</html>

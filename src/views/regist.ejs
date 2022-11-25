@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+     <%- include('assets/head') %>
+   </head>
+   <header>
+      <%- include('assets/header', {oldal: "register"}) %>
+   </header>
+   <body>
+       <h1 class="text-center">Új dolgozó regisztrálása</h1>
+       <div class="center">
+           <form class="form text-center" action="/register" method="post">
+               <label>E-mail:
+                   <input type="text" class="form-control" name="email_cim" >
+               </label><br>
+               <label>Név:
+                   <input type="text" class="form-control" name="nev" >
+               </label><br>
+               <label>Jelszó:
+                   <input type="password" class="form-control" name="jelszo" >
+               </label><br>
+               <label>Jelszó megint:
+                   <input type="password" class="form-control" name="jelszo2" >
+               </label><br>
+               <label>Raktár:<br>
+                   <select class="form-select"  name="selected_raktar">
+                       <% for(let i = 0; i < raktar.length; i++){ %>
+                           <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
+                       <% } %>
+
+                   </select>
+               </label><br>
+               <input class="gomb mt-3" type="SUBMIT" value="Felvesz">
+           </form>
+           <% if(locals.hiba){ %> 
+           <p><%- hiba %> </p>
+            <% } %>
+       </div>
+
+   </body>
+   <%- include('assets/footer') %>
+</html>

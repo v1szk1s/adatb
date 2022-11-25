@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal: "raktarok"}) %>
+    </header>
+    <body>
+        <div class="w-100 text-end">
+        <% if(locals.szerkeszt){ %>
+            <a class="gomb m-2 p-3" href="/raktarok">Mégse</a>
+        <% }else{ %>
+            <a class="gomb m-3 p-3" href="/raktarok?szerkeszt=1">Szerkeszt</a>
+        <% } %>
+        </div>
+        <table class="table align-middle w-75 mx-auto">
+            <thead>
+                <tr>
+                    <th>Város</th>
+                    <th>Utca</th>
+                    <th>Kapacitás</th>
+                    <% if(locals.szerkeszt){ %>
+                        <th class="text-center">Opciók</th>
+                    <% }else{ %>
+                        <th class="text-center"></th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i = 0; i < raktar.length; i++){ %>
+                <tr>
+                    <% if(locals.id != raktar[i].raktar_id){ %>
+                        <td><%= raktar[i].varos %></td>
+                        <td><%= raktar[i].utca %> </td>
+                        <td><%= raktar[i].kapacitas %> m<sup>3</sup></td>
+                        <% if(locals.szerkeszt){ %>
+                            <td class="">
+                                <form class="inline float-end p-2 " action="/deleteRaktar" method="post">
+                                    <input type="hidden" name="id" value="<%- raktar[i].raktar_id %>" >
+                                    <input class="torol" type="SUBMIT" value="Töröl" >
+                                </form>
+                                <a class="gomb float-end p-2 m-1" href="/raktarok?szerkeszt=1&id=<%- raktar[i].raktar_id %>">Módosít</a>
+                            </td>
+                        <% }else{ %>
+                        <td>
+                            <a class="gomb float-end" href="/viewRaktar?id=<%- raktar[i].raktar_id %>">Árukészlet</a>
+                            </td>
+                        <% } %>
+                    <% }else{ %>
+                        <form class="inline" action="/editRaktar" method="post">
+                            <input name="id" type="hidden" value="<%= raktar[i].raktar_id %>">
+                            <td><input name="varos" type="text" value="<%= raktar[i].varos %>"</td>
+                            <td><input name="utca" type="text" value="<%= raktar[i].utca %>"</td>
+                            <td><input name="kapacitas" type="number" value="<%= raktar[i].kapacitas %>"</td>
+                            <td>
+                                <a href="/raktarok?szerkeszt=1" class="gomb float-end m-2">Mégse</a>
+                                <input class="gomb float-end m-1" type="SUBMIT" value="Változtat" >
+                            </td>
+                        </form>
+                    <% } %>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <h1 class="ps-4">Raktár hozzáadása:</h1>
+        <form class="form" action="/raktarok" method="post">
+            <label>Város:
+                <input type="text" class="form-control" name="varos" ></input>
+            </label>
+            <label>Utca:
+                <input type="text" class="form-control" name="utca" ></input>
+            </label>
+            <label>Kapacitás:
+                <input type="number" class="form-control" name="kapacitas" </input>
+            </label>
+            <input class="gomb" type="submit" value="Felvesz">
+        </form>
+
+    </body>
+    <%- include('assets/footer') %>
+</html>

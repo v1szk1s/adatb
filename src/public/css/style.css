@@ -1,0 +1,156 @@
+a:link, a:active, a:visited, a:hover{
+    text-decoration: none !important;
+}
+a:hover{
+}
+
+html {
+    font-size: 14px;
+}
+
+
+footer {
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    color: black;
+    background-color: black !important;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+}
+
+.active {
+    color: black;
+}
+
+.center{
+    margin: auto;
+}
+
+.copyright{
+    width: 100%;
+    text-align: center;
+    color: black;
+    font-size: small;
+    padding: 0;
+    margin: 0;
+
+}
+.gomb{
+    background-color: rgba(50, 149, 168);
+    color: white;
+    padding: 0.5em;
+    border-radius: 4px;
+    border: 0;
+    text-decoration: none !important;
+}
+.gomb:hover{
+    color: white;
+    background-color: rgba(45, 182, 227);
+}
+.torol{
+    background-color: rgba(255, 50, 57);
+    color: white;
+    padding: 0.3em 1em ;
+    border-radius: 4px;
+    border: 0;
+    text-decoration: none !important;
+    color: white;
+}
+.torol:hover{
+    color: white;
+    background-color: rgba(255, 2, 2);
+}
+
+.hiba{
+    background-color: red;
+    padding: 0.8em;
+    color: white;
+    border-radius: 4px;
+    width: 80%;
+    margin: auto;
+}
+.siker {
+    background-color: green;
+    padding: 0.4em;
+    color: white;
+    border-radius: 4px;
+    width: 80%;
+    margin: auto;
+}
+
+.form{
+    max-width: ;
+    margin: auto auto;
+    padding: 1em;
+    margin: 1em;
+
+}
+
+.fade-out {
+    animation: fadeOut 3s ease-in-out 0s forwards;
+    -webkit-animation: fadeOut 3s ease-in-out 0s forwards;
+    -moz-animation: fadeOut 3s ease-in-out 0s forwards;
+    -o-animation: fadeOut 3s ease-in-out 0s forwards;
+    -ms-animation: fadeOut 3s ease-in-out 0s forwards;
+}
+@keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+@-moz-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-webkit-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-o-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-ms-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+    }
+}
+
+.inline {
+    display: inline;
+}
+.block {
+    display: block;
+}
+
+
+
+

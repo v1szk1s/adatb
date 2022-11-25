@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal: "aruk"}) %>
+    </header>
+    <body>
+
+        <% if(locals.szerkeszt){ %>
+            <a class="gomb m-2 float-end" href="/aruk">Mégse</a>
+        <% }else{ %>
+            <a class="gomb m-2 float-end" href="/aruk?szerkeszt=1">Szerkeszt</a>
+        <% } %>
+        <table class="table align-middle w-75 mx-auto">
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Térfogat</th>
+                    <th>Súly</th>
+                    <th class="text-center">Ár</th>
+                    <% if(locals.szerkeszt){ %>
+                        <th class="text-center">Opciók</th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i = 0; i < aruk.length; i++){ %>
+                <tr>
+                    <% if(locals.id != aruk[i].aru_id){ %>
+                        <td><%= aruk[i].nev %></td>
+                        <td><%= aruk[i].terfogat %> m<sup>3</sup></td>
+                        <td><%= aruk[i].suly %> Kg</td>
+                        <td class="text-center"><%= aruk[i].ar %> Ft</td>
+                    <% if(locals.szerkeszt){ %>
+                        <td class="text-center">
+                            <a class="gomb" href="/aruk?szerkeszt=1&id=<%- aruk[i].aru_id %>">Módosít</a>
+                            <form class="inline" action="/deleteAru" method="post">
+                                <input type="hidden" name="aru_id" value="<%- aruk[i].aru_id %>" >
+                                <input class="torol" type="SUBMIT" value="Töröl" >
+                            </form>
+                        </td>
+                    <% } %>
+                    <% }else{ %>
+                        <form class="inline" action="/editAru" method="post">
+                            <input name="aru_id" type="hidden" value="<%= aruk[i].aru_id %>">
+                            <td><input name="nev" type="text" value="<%= aruk[i].nev %>"></td>
+                            <td><input name="terfogat" type="text" value="<%= aruk[i].terfogat %>"> m<sup>3</sup></td>
+                            <td><input name="suly" type="text" value="<%= aruk[i].suly %>"> Kg</td>
+                            <td><input name="ar" type="number" value="<%= aruk[i].ar %>"> Ft</td>
+                            <td>
+                                <a href="/arukok?szerkeszt=1" class="gomb">Mégse</a>
+                                <input class="gomb" type="SUBMIT" value="Változtat" >
+                            </td>
+                        </form>
+                    <% } %>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <form class="form" action="/addAru" method="post">
+            <label>Név:
+                <input type="text" class="form-control" name="nev" ></input>
+            </label>
+            <label>Térfogat:
+                <input type="text" class="form-control" name="terfogat" ></input>
+            </label>
+            <label>Súly:
+                <input type="text" class="form-control" name="suly" ></input>
+            </label>
+            <label>Ár:
+                <input type="number" class="form-control" name="ar" </input>
+            </label>
+            <input class="gomb" type="submit" value="Felvesz">
+        </form>
+
+    </body>
+    <%- include('assets/footer') %>
+</html>

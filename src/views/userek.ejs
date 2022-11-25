@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal: "users"}) %>
+    </header>
+    <body>
+        <h1>Raktárban dolgozó felhasználók</h1>
+
+        <% if(locals.szerkeszt){ %>
+            <a class="gomb m-2 float-end" href="/users">Mégse</a>
+        <% }else{ %>
+            <a class="gomb m-2 float-end" href="/users?szerkeszt=1">Szerkeszt</a>
+        <% } %>
+        <table class="table m-4">
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Raktár</th>
+                    <% if(locals.szerkeszt){ %>
+                        <th>Opciók</th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i = 0; i < raktar_user.length; i++){ %>
+                <tr>
+                    <% if(locals.felhasznalo_id != raktar_user[i].felhasznalo_id){ %>
+                        <td><%= raktar_user[i].nev %></td>
+                        <td><%= raktar_user[i].email %> </td>
+                        <td><%= raktar_user[i].role %> </td>
+                        <td><%= raktar_user[i].raktar %> </td>
+                    <% if(locals.szerkeszt){ %>
+                        <td>
+                            <a class="gomb" href="/users?szerkeszt=1&id=<%- raktar_user[i].felhasznalo_id %>">Módosít</a>
+                            <form class="inline" action="/deleteUser" method="post">
+                                <input type="hidden" name="id" value="<%- raktar_user[i].felhasznalo_id %>" >
+                                <input class="torol" type="SUBMIT" value="Töröl" >
+                            </form>
+                        </td>
+                    <% } %>
+                    <% }else{ %>
+                        <form class="inline" action="/editUser" method="post">
+                            <input name="felhasznalo_id" type="hidden" value="<%= raktar_user[i].felhasznalo_id %>">
+                            <td><input name="nev" type="text" value="<%= raktar_user[i].nev %>"</td>
+                            <td><input name="email" type="text" value="<%= raktar_user[i].email %>"</td>
+                            <td>
+                                <select name="role">
+                                    <option <% if(raktar_user[i].role == "USER"){  %>selected<% } %> value="USER">Felhasználó</option>
+                                    <option <% if(raktar_user[i].role == "ADMIN"){  %>selected<% } %> value="ADMIN">Admin</option>
+
+                                </select>
+                            </td>
+                            <td>
+                                <select name="selected_raktar">
+                                    <option <% if(raktar_user[i].raktar_id == null){  %>selected<% } %> value="NULL">Üres</option>
+                                    <% for(let j = 0; j < raktar.length; j++){ %>
+                                    <option <% if(raktar_user[i].raktar_id == raktar[j].raktar_id){  %>selected<% } %> value="<%- raktar[j].raktar_id %>"><%- raktar[j].varos %>, <%- raktar[j].utca %></option>
+                                    <% } %>
+
+                                </select>
+                            </td>
+                            <td>
+                                <a href="/users?szerkeszt=1" class="gomb">Mégse</a>
+                                <input class="gomb" type="SUBMIT" value="Változtat" >
+                            </td>
+                        </form>
+                    <% } %>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <h1>Nem raktárhoz rendelt felhasználók</h1>
+
+        <table class="table m-4">
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <% if(locals.szerkeszt){ %>
+                        <th>Opciók</th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i = 0; i < free_user.length; i++){ %>
+                <tr>
+                    <% if(locals.felhasznalo_id != free_user[i].felhasznalo_id){ %>
+                        <td><%= free_user[i].nev %></td>
+                        <td><%= free_user[i].email %> </td>
+                        <td><%= free_user[i].role %> </td>
+                    <% if(locals.szerkeszt){ %>
+                        <td>
+                            <a class="gomb" href="/users?szerkeszt=1&id=<%- free_user[i].felhasznalo_id %>">Módosít</a>
+                            <form class="inline" action="/deleteUser" method="post">
+                                <input type="hidden" name="id" value="<%- free_user[i].felhasznalo_id %>" >
+                                <input class="torol" type="SUBMIT" value="Töröl" >
+                            </form>
+                        </td>
+                    <% } %>
+                    <% }else{ %>
+                        <form class="inline" action="/editUser" method="post">
+                            <input name="felhasznalo_id" type="hidden" value="<%= free_user[i].felhasznalo_id %>">
+                            <td><input name="nev" type="text" value="<%= free_user[i].nev %>"</td>
+                            <td><input name="email" type="text" value="<%= free_user[i].email %>"</td>
+                            <td>
+                                <select name="role">
+                                    <option <% if(free_user[i].role == "USER"){  %>selected<% } %> value="USER">Felhasználó</option>
+                                    <option <% if(free_user[i].role == "ADMIN"){  %>selected<% } %> value="ADMIN">Admin</option>
+
+                                </select>
+                            </td>
+                            <td>
+                                <select name="selected_raktar">
+                                    <option <% if(raktar_user[i].raktar_id == null){  %>selected<% } %> value="NULL">Üres</option>
+                                    <% for(let j = 0; j < raktar.length; j++){ %>
+                                    <option <% if(free_user[i].raktar_id == raktar[j].raktar_id){  %>selected<% } %> value="<%- raktar[j].raktar_id %>"><%- raktar[j].varos %>, <%- raktar[j].utca %></option>
+                                    <% } %>
+
+                                </select>
+                            </td>
+                            <td>
+                                <a href="/users?szerkeszt=1" class="gomb">Mégse</a>
+                                <input class="gomb" type="SUBMIT" value="Változtat" >
+                            </td>
+                        </form>
+                    <% } %>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <% for(let i = 0; i < free_user.length; i++){ %>
+        <%- free_user.nev %>
+        <% } %>
+
+    </body>
+    <%- include('assets/footer') %>
+</html>
