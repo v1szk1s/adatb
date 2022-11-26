@@ -27,7 +27,11 @@ footer {
 }
 
 .active {
+    font-weight: bold;
     color: black;
+    background-color: rgb(123, 98, 223, 0.6);
+    border-radius: 6px;
+
 }
 
 .center{
@@ -71,11 +75,8 @@ footer {
 
 .hiba{
     background-color: red;
-    padding: 0.8em;
-    color: white;
+    color: white !important;
     border-radius: 4px;
-    width: 80%;
-    margin: auto;
 }
 .siker {
     background-color: green;

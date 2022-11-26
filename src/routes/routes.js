@@ -13,7 +13,7 @@ const router = express.Router();
 
 let counter = 0;
 router.get("/", auth, async (req, res) => {
-    return res.redirect('/raktarok');
+    return res.redirect('/raktar');
     let {curr_email, curr_role} = req.body;
 
     let siker = req.query.siker;
@@ -30,9 +30,13 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.get("/register", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     const raktar = await raktardb.getAllRaktar(); 
 
     return res.render('regist', {
+        curr_role: curr_role,
         raktar: raktar,
         hiba: ""
     });
@@ -69,7 +73,7 @@ router.post("/register", auth,  async (req, res) => {
     await bcrypt.hash(jelszo, 10).then(async(hash) => {
         await userdb.addUser(email_cim, nev, selected_raktar, hash);
     });
-    res.redirect('/users');
+    return res.redirect('/users');
 });
 
 router.get("/login", async (req, res) => {
@@ -128,10 +132,51 @@ router.get("/logout", (req, res) => {
         maxAge: "1"
     })
     counter = 0;
-    res.redirect("/")
+    return res.redirect("/")
+});
+
+router.get("/profile", auth, async (req, res) => {
+    const {curr_email, curr_role} = req.body;
+    const user = await userdb.getUserByEmail(curr_email);
+    let raktar;
+    if(user.raktar_id)
+        raktar = await raktardb.getRaktarNameById(user.raktar_id);
+    return res.render('profile',{
+        curr_role: curr_role,
+        raktar_nev: raktar,
+        user:user
+    });
+});
+
+router.get("/changePassword", auth, async (req, res) => {
+
+    return res.render('changePassword', {
+        hiba: ""
+    });
+});
+
+router.post("/changePassword", auth, async (req, res) => {
+   let {jelszo, jelszo2, curr_email} = req.body; 
+
+    if(!jelszo && !jelszo2)
+        return res.redirect('/changePassword');
+
+    if(jelszo !== jelszo2)
+        return res.render('changePassword', {
+            hiba: "A két jelszó nem egyezik!"
+        });
+    else
+        await bcrypt.hash(jelszo, 10).then(async(hash) => {
+            await userdb.updatePassword(curr_email, hash);
+        });
+    return res.redirect('profile');
+
 });
 
 router.get("/users", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     const raktar_user = await userdb.getAllRaktarUser(); 
     const free_user = await userdb.getAllFreeUser(); 
     let szerkeszt = req.query.szerkeszt;
@@ -148,20 +193,27 @@ router.get("/users", auth, async (req, res) => {
         free_user: free_user,
         raktar: raktar,
         szerkeszt: szerkeszt,
-        curr_role: req.body.curr_role
+        curr_role: req.body.curr_role,
+        curr_email: req.body.curr_email
     });
 });
 
 router.post("/editUser", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     let {felhasznalo_id, nev, email, role, selected_raktar} = req.body;
     if(felhasznalo_id, nev, email, role, selected_raktar){
         await userdb.editUser(felhasznalo_id, nev, email, role, selected_raktar);
     }
-    res.redirect('/users?szerkeszt=1');
+    return res.redirect('/users?szerkeszt=1');
 
 });
 
 router.post("/deleteUser", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     let {id} = req.body;
     await userdb.deleteUser(id);
   
@@ -169,22 +221,34 @@ router.post("/deleteUser", auth, async (req, res) => {
 });
 
 ///////////
-// Raktarok
+// raktar
 //////////
 
-router.get("/raktarok", auth, async (req, res) => {
+router.get("/raktar", auth, async (req, res) => {
+    const {curr_email, curr_role} = req.body;
+
     const raktar = await raktardb.getAllRaktar(); 
     let szerkeszt = req.query.szerkeszt;
     let id = req.query.id;
+    let user;
+    if(curr_role !== 'ADMIN'){
+        user = await userdb.getUserByEmail(curr_email);
+        szerkeszt = id = "";
+    }
 
-    return res.render('raktarok', {
+    return res.render('raktar', {
+        user: user,
+        curr_role: curr_role,
         id: id,
         raktar: raktar,
         szerkeszt: szerkeszt
     });
 });
 
-router.post("/raktarok", auth, async (req, res) => {
+router.post("/raktar", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     let {varos, utca, kapacitas} = req.body;
     let hiba;
     if(!varos || !utca || !kapacitas){
@@ -194,74 +258,129 @@ router.post("/raktarok", auth, async (req, res) => {
     }
     if(hiba){
         const raktar = await raktardb.getAllRaktar(); 
-        return res.render('raktarok' ,{
+        return res.render('raktar' ,{
             hiba:hiba,
             raktar: raktar
         });
     }
     await raktardb.addRaktar(varos, utca, kapacitas);
   
-    return res.redirect('/raktarok');
+    return res.redirect('/raktar');
 });
 
 router.post("/editRaktar", auth, async (req, res) => {
+    const {curr_role, curr_email} = req.body;
+    if(curr_role !== 'ADMIN' )
+        return res.redirect('/raktar');
     let {id, varos, utca, kapacitas} = req.body;
     if(varos && utca && kapacitas){
         await raktardb.editRaktar(id, varos, utca, kapacitas);
     }
-    res.redirect('/raktarok?szerkeszt=1');
+    return res.redirect('/raktar?szerkeszt=1');
 
 });
 
 router.post("/deleteRaktar", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     let {id} = req.body;
     await raktardb.deleteRaktar(id);
   
-    return res.redirect('raktarok?szerkeszt=1');
+    return res.redirect('raktar?szerkeszt=1');
 });
 
 router.get("/viewRaktar", auth, async (req, res) => {
+    const {curr_role, curr_email} = req.body;
+    const user = await userdb.getUserByEmail(curr_email);
     let raktar_id = req.query.id;
+    let sajat = raktar_id == user.raktar_id ? 1:0;
+    let aru_id = req.query.aru_id;
     let szerkeszt = req.query.szerkeszt;
     const nev = await raktardb.getRaktarNameById(raktar_id);
     const aruk = await raktardb.getAllAruByRaktarId(raktar_id);
     const all_aru = await raktardb.getAllAru(raktar_id);
-    res.render('viewRaktar',{
+    return res.render('viewRaktar',{
+        sajat: sajat,
+        curr_role: curr_role,
         szerkeszt: szerkeszt,
         raktar_id: raktar_id,
+        aru_id: aru_id,
         nev: nev,
         aruk: aruk,
         all_aru: all_aru
     });
-
 });
 
-router.post("/addAruToRaktar", auth, async (req, res) => {
-    let {selected_rakter_id, selected_aru_id, db} = req.body;
-    //await raktardb.addToKeszlet(selected_rakter_id, selected_aru_id, db);
-    await raktardb.addToKeszlet(1,2,3);
+router.get("/sajatRaktar", auth, async (req, res) => {
+    const {curr_role, curr_email} = req.body;
+    const user = await userdb.getUserByEmail(curr_email);
+    res.redirect(`viewRaktar?id=${user.raktar_id}`);
+});
 
-    return res.redirect(`viewRaktar?id=${selected_rakter_id}`);
+router.post("/addToKeszlet", auth, async (req, res) => {
+    let {raktar_id, aru_id, db, curr_role, curr_email} = req.body;
+    const user = await userdb.getUserByEmail(curr_email);
+    if(curr_role !== 'ADMIN' && raktar_id != user.raktar_id){
+        return res.redirect(`viewRaktar?id=${raktar_id}`);
+    }
+
+    if(isNaN(db) || db <= 0){
+        if(req.headers.referer.split('/')[3] === 'sajatRaktar')
+            return res.redirect(`sajatRaktar`);
+        return res.redirect(`viewRaktar?id=${raktar_id}`);
+    }
+
+    await raktardb.addToKeszlet(raktar_id, aru_id,db);
+    if(req.headers.referer.split('/')[3] === 'sajatRaktar')
+        return res.redirect(`sajatRaktar`);
+
+    return res.redirect(`viewRaktar?id=${raktar_id}`);
+});
+
+router.post("/editKeszlet", auth, async (req, res) => {
+    let {raktar_id, aru_id, mennyiseg, curr_email, curr_role} = req.body; 
+    const user = await userdb.getUserByEmail(curr_email);
+
+    if(curr_role !== 'ADMIN' && raktar_id != user.raktar_id){
+        return res.redirect(`viewRaktar?id=${raktar_id}`);
+    }
+
+    if(isNaN(mennyiseg))
+    return res.redirect(`viewRaktar?id=${raktar_id}&szerkeszt=1`);
+
+
+    await raktardb.editKeszlet(raktar_id, aru_id, mennyiseg);
+
+    return res.redirect(`viewRaktar?id=${raktar_id}&szerkeszt=1`);
 });
 
 router.post("/deleteFromKeszlet", auth, async (req, res) => {
-    let {aru_id} = req.body;
+    let {aru_id, raktar_id, curr_email, curr_role} = req.body;
+    const user = await userdb.getUserByEmail(curr_email);
+    if(curr_role !== 'ADMIN' && raktar_id != user.raktar_id){
+        return res.redirect(`viewRaktar?id=${raktar_id}`);
+    }
 
     await raktardb.deleteFromKeszlet(aru_id);
 
-    return res.redirect
-}
+    return res.redirect(`viewRaktar?id=${raktar_id}&szerkeszt=1`);
+});
 
 ////////////////
 // aruk
 ///////////////
 
 router.get("/aruk", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
     const aruk = await raktardb.getAllAru();
     let szerkeszt = req.query.szerkeszt;
     let id = req.query.id;
 
     return res.render('aruk',{
+        curr_role: curr_role,
         aruk: aruk,
         id: id,
         szerkeszt: szerkeszt

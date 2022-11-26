@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal: "profile"}) %>
+    </header>
+    <h1 class="p-2 text-center">Üdvözlet <%- user.nev %>!</h1>
+    <h2 class="p-4">Profil adatok:</h2>
+
+    <div class="text-center">
+        <p>E-mail: <strong><%- user.email %></strong> </p>
+        <p>Név: <strong><%- user.nev %></strong></p>
+        <% if(raktar_nev){ %>
+            <p>Raktár: <strong><%- raktar_nev %></strong></p>
+        <% } %>
+        <a class="gomb w-75 m-2 p-2" href="/changePassword">Jelszó megváltoztatása</a>
+    </div><br>
+
+
+
+        <%- include('assets/footer') %>
+    </body>
+</html>

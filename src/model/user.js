@@ -28,7 +28,15 @@ exports.getAllRaktarUser = async () => {
     return rows;
 }
 
-//exports.getAllUser = async () => {
-//    let [rows, fields] = await db.query(`SELECT * FROM felhasznalo`);
-//    return rows;
-//}
+exports.updatePassword = async (email, uj_jelszo) => {
+    await db.query(`UPDATE felhasznalo SET jelszo="${uj_jelszo}"  WHERE email="${email}"`);
+}
+
+exports.updateEmail = async (email, uj_email) => {
+    await db.query(`UPDATE felhasznalo SET email="${uj_email}"  WHERE email="${email}"`);
+}
+
+exports.updateName = async (email, uj_nev) => {
+    await db.query(`UPDATE felhasznalo SET nev="${uj_nev}"  WHERE email="${email}"`);
+}
+

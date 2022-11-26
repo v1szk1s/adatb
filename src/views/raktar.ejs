@@ -4,14 +4,17 @@
         <%- include('assets/head') %>
     </head>
     <header>
-        <%- include('assets/header', {oldal: "raktarok"}) %>
+        <%- include('assets/header', {oldal: "raktar"}) %>
     </header>
     <body>
         <div class="w-100 text-end">
-        <% if(locals.szerkeszt){ %>
-            <a class="gomb m-2 p-3" href="/raktarok">Mégse</a>
-        <% }else{ %>
-            <a class="gomb m-3 p-3" href="/raktarok?szerkeszt=1">Szerkeszt</a>
+
+        <% if(curr_role === 'ADMIN'){ %>
+            <% if(locals.szerkeszt){ %>
+                <a class="gomb m-2 p-3" href="/raktar">Mégse</a>
+            <% }else{ %>
+                <a class="gomb m-3 p-3" href="/raktar?szerkeszt=1">Szerkeszt</a>
+            <% } %>
         <% } %>
         </div>
         <table class="table align-middle w-75 mx-auto">
@@ -40,11 +43,11 @@
                                     <input type="hidden" name="id" value="<%- raktar[i].raktar_id %>" >
                                     <input class="torol" type="SUBMIT" value="Töröl" >
                                 </form>
-                                <a class="gomb float-end p-2 m-1" href="/raktarok?szerkeszt=1&id=<%- raktar[i].raktar_id %>">Módosít</a>
+                                <a class="gomb float-end p-2 m-1" href="/raktar?szerkeszt=1&id=<%- raktar[i].raktar_id %>">Módosít</a>
                             </td>
                         <% }else{ %>
-                        <td>
-                            <a class="gomb float-end" href="/viewRaktar?id=<%- raktar[i].raktar_id %>">Árukészlet</a>
+                            <td>
+                                <a class="gomb float-end" href="/viewRaktar?id=<%- raktar[i].raktar_id %>">Árukészlet</a>
                             </td>
                         <% } %>
                     <% }else{ %>
@@ -54,7 +57,7 @@
                             <td><input name="utca" type="text" value="<%= raktar[i].utca %>"</td>
                             <td><input name="kapacitas" type="number" value="<%= raktar[i].kapacitas %>"</td>
                             <td>
-                                <a href="/raktarok?szerkeszt=1" class="gomb float-end m-2">Mégse</a>
+                                <a href="/raktar?szerkeszt=1" class="gomb float-end m-2">Mégse</a>
                                 <input class="gomb float-end m-1" type="SUBMIT" value="Változtat" >
                             </td>
                         </form>
@@ -63,8 +66,9 @@
                 <% } %>
             </tbody>
         </table>
+        <% if(curr_role === 'ADMIN'){ %>
         <h1 class="ps-4">Raktár hozzáadása:</h1>
-        <form class="form" action="/raktarok" method="post">
+        <form class="form" action="/raktar" method="post">
             <label>Város:
                 <input type="text" class="form-control" name="varos" ></input>
             </label>
@@ -76,6 +80,7 @@
             </label>
             <input class="gomb" type="submit" value="Felvesz">
         </form>
+        <% } %>
 
     </body>
     <%- include('assets/footer') %>

@@ -95,7 +95,7 @@
                         <td><%= free_user[i].nev %></td>
                         <td><%= free_user[i].email %> </td>
                         <td><%= free_user[i].role %> </td>
-                    <% if(locals.szerkeszt){ %>
+                    <% if(locals.szerkeszt && free_user[i].email != curr_email){ %>
                         <td>
                             <a class="gomb" href="/users?szerkeszt=1&id=<%- free_user[i].felhasznalo_id %>">Módosít</a>
                             <form class="inline" action="/deleteUser" method="post">
@@ -103,6 +103,8 @@
                                 <input class="torol" type="SUBMIT" value="Töröl" >
                             </form>
                         </td>
+                    <% }else{ %>
+                        <td><p>Saját profil változtatása, csak a profil fülnél lehetséges.</p></td>
                     <% } %>
                     <% }else{ %>
                         <form class="inline" action="/editUser" method="post">
