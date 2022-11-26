@@ -412,5 +412,21 @@ router.post("/deleteAru", auth, async (req, res) => {
     return res.redirect('aruk?szerkeszt=1');
 });
 
+router.get("/szallitmany", auth, async (req, res) => {
+    const {curr_role} = req.body;
+    if(curr_role !== 'ADMIN')
+        return res.redirect('/raktar');
+    const aruk = await raktardb.getAllAru();
+    let szerkeszt = req.query.szerkeszt;
+    let id = req.query.id;
+
+    return res.render('szallitmany',{
+        curr_role: curr_role,
+        aruk: aruk,
+        id: id,
+        szerkeszt: szerkeszt
+    });
+
+});
 
 module.exports = router;
