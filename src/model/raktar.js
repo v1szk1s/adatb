@@ -246,5 +246,16 @@ const getAruMennyisegBySzallitmanyIdAruId = async (szallitmany_id, aru_id) => {
 }
 exports.getAruMennyisegBySzallitmanyIdAruId = getAruMennyisegBySzallitmanyIdAruId;
 
+const stat1 = async () => {
+    let [rows, fields] = await db.query(`SELECT raktar.varos AS nev, count(felhasznalo.nev) AS mennyiseg FROM felhasznalo, raktar WHERE felhasznalo.raktar_id=raktar.raktar_id group by raktar.varos order by mennyiseg desc`);
+    return rows;
+}
+exports.stat1 = stat1;
+
+const stat2 = async () => {
+    let [rows, fields] = await db.query(`SELECT concat(raktar.varos,", ", raktar.utca) as nev, raktar.kapacitas from raktar where raktar.kapacitas > (select avg(kapacitas) from raktar)`);
+    return rows;
+}
+exports.stat2 = stat2;
 
 

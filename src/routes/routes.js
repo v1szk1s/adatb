@@ -621,8 +621,16 @@ router.get("/viewRakomany", auth, async (req, res) => {
 });
 
 router.get('/statok', auth, async (req, res) => {
+    let {curr_role} = req.body;
 
-    res.render('statok');
+    const stat1 = await db.stat1();
+    const stat2 = await db.stat2();
+
+    res.render('statok', {
+        curr_role: curr_role,
+        stat1: stat1,
+        stat2: stat2
+    });
 
 });
 

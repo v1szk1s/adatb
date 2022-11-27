@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal:"statok"}) %>
+    </header>
+    <body>
+        <h1>Dolgozók száma per város:</h1>
+        <table class="table w-75 mx-auto">
+        <tr>
+            <th>Város</td>
+            <th class="text-center">Dolgozók száma: </td>
+        </tr>
+        <% for(let i = 0; i < stat1.length; i++){ %>
+        <tr>
+            <td><%- stat1[i].nev %></td>
+            <td class="text-center"><%- stat1[i].mennyiseg %> db</td>
+        </tr>
+        <% } %>
+        </table>
+
+        <h1>Átlagnál nagyobb raktárak:</h1>
+        <table class="table w-75 mx-auto">
+        <tr>
+            <th>Név</td>
+            <th class="text-center">Kapacitás</td>
+        </tr>
+        <% for(let i = 0; i < stat2.length; i++){ %>
+        <tr>
+            <td><%- stat2[i].nev %></td>
+            <td class="text-center"><%- stat2[i].kapacitas %> m<sup>3</sup></td>
+        </tr>
+        <% } %>
+        </table>
+    </body>
+    <!-- <%- include('assets/footer') %> -->
+</html>
