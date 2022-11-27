@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal:"szallitmany"}) %>
+    </header>
+    <body>
+        <div>
+        <a class="gomb m-2 p-3" href="/szallitmany">Vissza</a>
+        </div>
+        <br><br>
+        <div class="text-end">
+        <% if(curr_role === 'ADMIN'){ %>
+            <% if(locals.szerkeszt){ %>
+            <a class="gomb m-2 p-3" href="/viewRakomany?id=<%- szallitmany_id %>">Mégse</a>
+            <% }else{ %>
+                <a class="gomb m-3 p-3" href="/viewRakomany?id=<%- szallitmany_id %>&szerkeszt=1">Szerkeszt</a>
+            <% } %>
+        <% } %>
+        </div>
+        <br>
+        <h1>Rakomány</h1>
+        <table class="table align-middle w-75 mx-auto">
+            <thead>
+               <tr>
+                    <th>Név</th>
+                    <th>Mennyiség</th>
+                    <% if(locals.szerkeszt){ %>
+                        <th class="text-center">Új mennyiseg</th>
+                        <th class="text-center">Opciók</th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+        <% if(locals.rakomany) for(let i = 0; i < rakomany.length; i++){ %>
+            <tr>
+            <td><%= rakomany[i].nev %></td>
+            <% if(szerkeszt){ %>
+                        <form class="inline" action="/editRakomanyUtolag" method="post">
+                            <input type="hidden" name="szallitmany_id" value="<%- szallitmany_id %>" >
+                            <input type="hidden" name="aru_id" value="<%- rakomany[i].aru_id %>" >
+                            <td><%= rakomany[i].mennyiseg %> Db</td>
+                            <td>
+                                <input type="number" name="mennyiseg" value="<%- rakomany[i].mennyiseg %>" >
+                            </td>
+                            <td>
+                                <input class="gomb" type="submit" value="Változtat">
+                                <a class="torol" href="/torolFromRakomanyUtolag?szallitmany_id=<%- szallitmany_id %>&aru_id=<%- rakomany[i].aru_id %>">Töröl</a>
+                            </td>
+                        </form>
+            <% }else{ %>
+                    <td><%= rakomany[i].mennyiseg %> Db</td>
+            <% } %>
+            </tr>
+        <% } %>
+        </tbody>
+        </table>
+
+
+        <% if(locals.szerkeszt){ %>
+
+            <table class="table align-middle w-75 mx-auto">
+                <thead>
+                    <tr>
+                        <th>Név</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+            <% for(let i = 0; i < aruk.length; i++){ %>
+                <tr>
+                    <td><%= aruk[i].nev %></td>
+                    <td class="text-center">
+                        <form class="inline" action="/addToRakomanyUtolag" method="post">
+                            <input type="hidden" name="szallitmany_id" value="<%- szallitmany_id %>" >
+                            <input type="hidden" name="aru_id" value="<%- aruk[i].aru_id %>" >
+                            <input class="gomb" type="submit" value="Hozzáad">
+                        </form>
+                    </td>
+                </tr>
+            <% } %>
+            </tbody>
+            </table>
+        <% } %>
+    </body>
+    <!-- <%- include('assets/footer') %> -->
+</html>

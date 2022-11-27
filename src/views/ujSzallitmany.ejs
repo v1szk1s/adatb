@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('assets/head') %>
+    </head>
+    <header>
+        <%- include('assets/header', {oldal:"szallitmany"}) %>
+    </header>
+    <body>
+        <a class="gomb m-2 p-3" href="/szallitmany">Vissza</a>
+        <br>
+        <form class="form" action="ujSzallitmany" method="post">
+            <input type="hidden" name="honnan_id" value="<%- honnan_id %>">
+            <label>Hova:
+                <select class="form-select"  name="hova_id">
+                    <% for(let i = 0; i < raktar.length; i++){ %>
+                    <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
+                    <% } %>
+                </select>
+            </label>
+            <input class="gomb mt-3" type="SUBMIT" value="Szállítmány felvétele">
+        </form>
+
+        <h1>Rakomány</h1>
+        <table class="table align-middle w-75 mx-auto">
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Mennyiség</th>
+                    <th></th>
+                    <% if(locals.szerkeszt){ %>
+                        <th class="text-center">Opciók</th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+        <% if(locals.rakomany) for(let i = 0; i < rakomany.length; i++){ %>
+            <tr>
+                <td><%= rakomany[i].nev %></td>
+                <td><%= rakomany[i].mennyiseg %> Db</td>
+                <td class="text-center">
+                    <form class="inline" action="/editRakomany" method="post">
+                        <input type="hidden" name="honnan_id" value="<%- honnan_id %>" >
+                        <input type="hidden" name="aru_id" value="<%- rakomany[i].aru_id %>" >
+                        <input type="number" name="mennyiseg" value="<%- rakomany[i].mennyiseg %>" >
+                        <input class="gomb" type="submit" value="Változtat">
+                    </form>
+                    <a class="torol" href="/torolFromRakomany?honnan_id=<%- honnan_id %>&aru_id=<%- rakomany[i].aru_id %>">Töröl</a>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+        </table>
+
+        <h1>Készlet</h1>
+
+        <table class="table align-middle w-75 mx-auto">
+            <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Mennyiség</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        <% for(let i = 0; i < aruk.length; i++){ %>
+            <tr>
+                <td><%= aruk[i].nev %></td>
+                <td><%= aruk[i].mennyiseg %> Db</td>
+                <td class="text-center">
+                    <form class="inline" action="/addToRakomany" method="post">
+                        <input type="hidden" name="honnan_id" value="<%- honnan_id %>" >
+                        <input type="hidden" name="aru_id" value="<%- aruk[i].aru_id %>" >
+                        <input type="hidden" value="1" name="mennyiseg">
+                        <input class="gomb" type="submit" value="Hozzáad">
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+        </table>
+
+    </body>
+    <!-- <%- include('assets/footer') %> -->
+</html>

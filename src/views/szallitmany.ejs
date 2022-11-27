@@ -11,18 +11,19 @@
 
         <% if(curr_role === 'ADMIN'){ %>
             <% if(locals.szerkeszt){ %>
-                <a class="gomb m-2 p-3" href="/raktar">Mégse</a>
+                <a class="gomb m-2 p-3" href="/szallitmany">Mégse</a>
             <% }else{ %>
-                <a class="gomb m-3 p-3" href="/raktar?szerkeszt=1">Szerkeszt</a>
+                <a class="gomb m-3 p-3" href="/szallitmany?szerkeszt=1">Szerkeszt</a>
             <% } %>
         <% } %>
         </div>
         <table class="table align-middle w-75 mx-auto">
             <thead>
                 <tr>
-                    <th>Város</th>
-                    <th>Utca</th>
-                    <th>Kapacitás</th>
+                    <th>Időpont</th>
+                    <th>Honnan</th>
+                    <th>Hova</th>
+                    <th>Felhasználó</th>
                     <% if(locals.szerkeszt){ %>
                         <th class="text-center">Opciók</th>
                     <% }else{ %>
@@ -31,33 +32,48 @@
                 </tr>
             </thead>
             <tbody>
-                <% for(let i = 0; i < raktar.length; i++){ %>
+                <% for(let i = 0; i < szallitmany.length; i++){ %>
                 <tr>
-                    <% if(locals.id != raktar[i].raktar_id){ %>
-                        <td><%= raktar[i].varos %></td>
-                        <td><%= raktar[i].utca %> </td>
-                        <td><%= raktar[i].kapacitas %> m<sup>3</sup></td>
+                    <% if(locals.id != szallitmany[i].szallitmany_id){ %>
+                        <td><%= szallitmany[i].idopont.toISOString().replace(/T/, ' ').replace(/\..+/, '') %></td>
+                        <td><%= szallitmany[i].honnan %> </td>
+                        <td><%= szallitmany[i].hova %></td>
+                        <td><%= szallitmany[i].nev %> </td>
                         <% if(locals.szerkeszt){ %>
                             <td class="">
-                                <form class="inline float-end p-2 " action="/deleteRaktar" method="post">
-                                    <input type="hidden" name="id" value="<%- raktar[i].raktar_id %>" >
+                                <form class="inline float-end p-2 " action="/deleteSzallitmany" method="post">
+                                    <input type="hidden" name="del_id" value="<%- szallitmany[i].szallitmany_id %>" >
                                     <input class="torol" type="SUBMIT" value="Töröl" >
                                 </form>
-                                <a class="gomb float-end p-2 m-1" href="/raktar?szerkeszt=1&id=<%- raktar[i].raktar_id %>">Módosít</a>
+                                <a class="gomb float-end p-2 m-1" href="/szallitmany?szerkeszt=1&id=<%- szallitmany[i].szallitmany_id %>">Módosít</a>
                             </td>
                         <% }else{ %>
                             <td>
-                                <a class="gomb float-end" href="/viewRaktar?id=<%- raktar[i].raktar_id %>">Árukészlet</a>
+                                <a class="gomb float-end" href="/viewRakomany?id=<%- szallitmany[i].szallitmany_id %>">Rakomány</a>
                             </td>
                         <% } %>
                     <% }else{ %>
-                        <form class="inline" action="/editRaktar" method="post">
-                            <input name="id" type="hidden" value="<%= raktar[i].raktar_id %>">
-                            <td><input name="varos" type="text" value="<%= raktar[i].varos %>"</td>
-                            <td><input name="utca" type="text" value="<%= raktar[i].utca %>"</td>
-                            <td><input name="kapacitas" type="number" value="<%= raktar[i].kapacitas %>"</td>
+                        <td><%= szallitmany[i].idopont.toISOString().replace(/T/, ' ').replace(/\..+/, '') %></td>
+                        <form class="inline" action="/editSzallitmany" method="post">
+                            <input name="szallitmany_id" type="hidden" value="<%= szallitmany[i].szallitmany_id %>">
                             <td>
-                                <a href="/raktar?szerkeszt=1" class="gomb float-end m-2">Mégse</a>
+                                <select class="form-select"  name="honnan_id">
+                                    <% for(let j = 0; j < raktar.length; j++){ %>
+                                    <option value="<%- raktar[j].raktar_id %>" <% if(raktar[j].raktar_id == szallitmany[i].honnan_id){ %>selected<% } %> ><%- raktar[j].varos %>, <%- raktar[j].utca %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select"  name="hova_id">
+                                    <option value="">Választ</option>
+                                    <% for(let j = 0; j < raktar.length; j++){ %>
+                                    <option value="<%- raktar[j].raktar_id %>" <% if(raktar[j].raktar_id == szallitmany[i].hova_id){ %>selected<% } %> ><%- raktar[j].varos %>, <%- raktar[j].utca %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                            <td><%= szallitmany[i].nev %> </td>
+                            <td>
+                                <a href="/szallitmany?szerkeszt=1" class="gomb float-end m-2">Mégse</a>
                                 <input class="gomb float-end m-1" type="SUBMIT" value="Változtat" >
                             </td>
                         </form>
@@ -66,22 +82,19 @@
                 <% } %>
             </tbody>
         </table>
-        <% if(curr_role === 'ADMIN'){ %>
-        <h1 class="ps-4">Raktár hozzáadása:</h1>
-        <form class="form" action="/raktar" method="post">
-            <label>Város:
-                <input type="text" class="form-control" name="varos" ></input>
+        <br>
+        <form action="/ujSzallitmany" method="get">
+            <label>Honnan:
+                <select class="form-select"  name="honnan_id">
+                    <option value="">Választ</option>
+                    <% for(let i = 0; i < raktar.length; i++){ %>
+                    <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
+                    <% } %>
+                </select>
             </label>
-            <label>Utca:
-                <input type="text" class="form-control" name="utca" ></input>
-            </label>
-            <label>Kapacitás:
-                <input type="number" class="form-control" name="kapacitas" </input>
-            </label>
-            <input class="gomb" type="submit" value="Felvesz">
+        <input class="gomb m-1" type="submit" value="Új szállítmány" >
         </form>
-        <% } %>
 
     </body>
-    <%- include('assets/footer') %>
+    <!-- <%- include('assets/footer') %> -->
 </html>

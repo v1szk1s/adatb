@@ -1,9 +1,11 @@
-Felhasznalo(_id_, nev, email, jelszo, role, /Raktarhelyseg.id/)
-Raktarhelyseg(_id_, kapacitas, varos, utca)
+Felhasznalo(_felhasznalo_id_, nev, email, jelszo, role, /Raktarhelyseg.raktar_id/);
 
-Szallitmany(_id_, idopont, mennyisegy, /Aruk.id/ ,/Raktarhelyseg.id/)
+Raktar(_raktar_id_, kapacitas, varos, utca);
 
-Aruk(_id_, nev, suly)
-Tartalmaz(_id_, mennyiseg, /Raktarhelyseg.id/, /Aruk.id/)
+Aruk(_aru_id_, nev, suly, terfogat, ar);
+Keszlet(_keszlet_id_, mennyiseg, /raktar_id/, /aru_id/);
+
+Szallitmany(_szallitmany_id_, /rakomany_id/, /felhasznalo_id/, idopont, honnan_raktar_id, hova_raktar_id);
+Rakomany(_rakomany_id_, /aru_id/, mennyisegy);
 
 
