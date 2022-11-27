@@ -7,7 +7,29 @@
         <%- include('assets/header', {oldal: "sajatRaktar"}) %>
     </header>
     <body>
+        <div class="p-3">
         <a class="gomb m-3 p-3" href="raktar">Raktárok</a>   
+        </div>
+
+        <% if(curr_role === 'ADMIN' || locals.sajat){ %>
+        <div class="p-4">
+            <form class="form" action="/addToKeszlet" method="post">
+                <input type="hidden" name="raktar_id" value="<%- raktar_id %>" ></input>
+                <label>Áru:
+                <select class="form-select" name="aru_id">
+                    <% for(let j = 0; j < all_aru.length; j++){ %>
+                    <option value="<%- all_aru[j].aru_id %>" <% if(j==0){ %>selected<% } %>><%- all_aru[j].nev %></option>
+                    <% } %>
+                </select>
+                </label>
+                <label>Db:
+                    <input type="number" class="form-control" name="mennyiseg"></input>
+                </label>
+                <input class="gomb" type="submit" value="Hozzáad">
+            </form>
+        </div>
+        <% } %>
+
         <h1 class="m-3"><%- locals.nev %> árukészlet:</h1>
 
         <% if(curr_role === 'ADMIN' || locals.sajat){ %>
@@ -70,21 +92,5 @@
                 <% } %>
             </tbody>
         </table>
-        <% if(curr_role === 'ADMIN' || locals.sajat){ %>
-        <form class="form" action="/addToKeszlet" method="post">
-            <input type="hidden" name="raktar_id" value="<%- raktar_id %>" ></input>
-            <label>Áru:
-            <select class="form-select" name="aru_id">
-                <% for(let j = 0; j < all_aru.length; j++){ %>
-                <option value="<%- all_aru[j].aru_id %>" <% if(j==0){ %>selected<% } %>><%- all_aru[j].nev %></option>
-                <% } %>
-            </select>
-            </label>
-            <label>Db:
-                <input type="number" class="form-control" name="db"></input>
-            </label>
-            <input class="gomb" type="submit" value="Hozzáad">
-        </form>
-        <% } %>
     </body>
 </html>

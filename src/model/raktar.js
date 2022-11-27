@@ -79,6 +79,9 @@ const getRaktarByUserId = async (id) => {
 exports.getRaktarByUserId = getRaktarByUserId;
 
 const deleteRaktar = async (id) => {
+    await db.query(`DELETE FROM rakomany WHERE szallitmany_id IN (SELECT szallitmany_id FROM szallitmany WHERE honnan_raktar_id=${id} OR hova_raktar_id=${id})`);
+    await db.query(`DELETE FROM szallitmany WHERE honnan_raktar_id=${id} OR hova_raktar_id=${id}`);
+    await db.query(`DELETE FROM keszlet WHERE raktar_id=${id}`);
     await db.query(`UPDATE felhasznalo SET raktar_id=NULL  WHERE raktar_id=${id}`);
     await db.query(`DELETE FROM raktar WHERE raktar_id=${id}`);
 }
@@ -133,6 +136,15 @@ const addToKeszlet = async (raktar_id, aru_id, mennyiseg) => {
 }
 exports.addToKeszlet = addToKeszlet;
 
+const getAruMennyisegByRaktarIdAruId = async (raktar_id, aru_id) => {
+    let [rows, fields] = await db.query(`SELECT * FROM keszlet WHERE aru_id=${aru_id} AND raktar_id=${raktar_id}`);
+    if(rows.length > 0)
+        return rows[0].mennyiseg;
+    else 
+        return 0;
+}
+exports.getAruMennyisegByRaktarIdAruId = getAruMennyisegByRaktarIdAruId;
+
 const editKeszlet = async (raktar_id, aru_id, mennyiseg) => {
     await db.query(`UPDATE keszlet SET mennyiseg=${mennyiseg} WHERE aru_id=${aru_id} AND raktar_id=${raktar_id}`);
 }
@@ -148,6 +160,8 @@ const addAru = async (nev, terfogat, suly, ar) => {
 exports.addAru = addAru;
 
 const deleteAru = async (id) => {
+    await db.query(`DELETE FROM keszlet WHERE aru_id=${id}`);
+    await db.query(`DELETE FROM rakomany WHERE aru_id=${id}`);
     await db.query(`DELETE FROM aru WHERE aru_id=${id}`);
 }
 exports.deleteAru = deleteAru;
@@ -173,6 +187,13 @@ const getAllSzallitmany = async () => {
     return rows;
 }
 exports.getAllSzallitmany = getAllSzallitmany;
+
+const getAllSzallitmanyByRaktarId = async (raktar_id) => {
+    let [rows, fields] = await db.query(`SELECT szallitmany_id, honnan.raktar_id as honnan_id, hova.raktar_id as hova_id, idopont, CONCAT(honnan.varos, ", ", honnan.utca) AS honnan, CONCAT(hova.varos, ", ", hova.utca) AS hova, felhasznalo.nev from szallitmany, raktar as honnan, raktar as hova, felhasznalo WHERE honnan_raktar_id = honnan.raktar_id and hova.raktar_id = hova_raktar_id AND felhasznalo.felhasznalo_id = szallitmany.felhasznalo_id AND (honnan_raktar_id=${raktar_id} OR hova_raktar_id=${raktar_id}) ORDER BY honnan.utca`);
+    
+    return rows;
+}
+exports.getAllSzallitmanyByRaktarId = getAllSzallitmanyByRaktarId;
 
 const getAllSzallitmanyIdByDate = async (idopont) => {
     let [rows, fields] = await db.query(`SELECT szallitmany_id from szallitmany WHERE idopont="${idopont}"`);

@@ -7,19 +7,15 @@
         <%- include('assets/header', {oldal:"szallitmany"}) %>
     </header>
     <body>
+
+        <div class="p-2 m-2">
         <a class="gomb m-2 p-3" href="/szallitmany">Vissza</a>
-        <br>
-        <form class="form" action="ujSzallitmany" method="post">
-            <input type="hidden" name="honnan_id" value="<%- honnan_id %>">
-            <label>Hova:
-                <select class="form-select"  name="hova_id">
-                    <% for(let i = 0; i < raktar.length; i++){ %>
-                    <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
-                    <% } %>
-                </select>
-            </label>
-            <input class="gomb mt-3" type="SUBMIT" value="Szállítmány felvétele">
-        </form>
+        </div>
+       
+        <div class="p-2 m-2">
+        <h2>Honnan: <%- honnan %></h2>
+
+        </div>
 
         <h1>Rakomány</h1>
         <table class="table align-middle w-75 mx-auto">
@@ -51,6 +47,22 @@
         <% } %>
         </tbody>
         </table>
+
+        <div class="text-end p-3 m-3">
+        <form class="form" action="ujSzallitmany" method="post">
+            <input type="hidden" name="honnan_id" value="<%- honnan_id %>">
+            <label>Hova:
+                <select class="form-select"  name="hova_id">
+                    <% for(let i = 0; i < raktar.length; i++){ %>
+                    <% if(honnan_id != raktar[i].raktar_id){ %>
+                            <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
+                        <% } %>
+                    <% } %>
+                </select>
+            </label>
+            <input class="gomb mt-3" type="SUBMIT" value="Szállítmány felvétele">
+        </form>
+        </div>
 
         <h1>Készlet</h1>
 

@@ -17,6 +17,22 @@
             <% } %>
         <% } %>
         </div>
+        <form class="form" action="/ujSzallitmany" method="get">
+            <% if(curr_role === 'ADMIN'){ %>
+                <label>Honnan:
+                    <select class="form-select"  name="honnan_id">
+                        <option value="">Választ</option>
+                        <% for(let i = 0; i < raktar.length; i++){ %>
+                        <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
+                        <% } %>
+                    </select>
+                </label>
+            <% }else{ %>
+            <input type="hidden" name="honnan_id" value="<%- honnan_id %>">
+
+            <% } %>
+        <input class="gomb m-1" type="submit" value="Új szállítmány" >
+        </form>
         <table class="table align-middle w-75 mx-auto">
             <thead>
                 <tr>
@@ -83,17 +99,6 @@
             </tbody>
         </table>
         <br>
-        <form action="/ujSzallitmany" method="get">
-            <label>Honnan:
-                <select class="form-select"  name="honnan_id">
-                    <option value="">Választ</option>
-                    <% for(let i = 0; i < raktar.length; i++){ %>
-                    <option value="<%- raktar[i].raktar_id %>"><%- raktar[i].varos %>, <%- raktar[i].utca %></option>
-                    <% } %>
-                </select>
-            </label>
-        <input class="gomb m-1" type="submit" value="Új szállítmány" >
-        </form>
 
     </body>
     <!-- <%- include('assets/footer') %> -->

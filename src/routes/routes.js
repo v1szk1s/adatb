@@ -319,19 +319,22 @@ router.get("/sajatRaktar", auth, async (req, res) => {
 });
 
 router.post("/addToKeszlet", auth, async (req, res) => {
-    let {raktar_id, aru_id, db, curr_role, curr_email} = req.body;
+    let {raktar_id, aru_id, mennyiseg, curr_role, curr_email} = req.body;
+
     const user = await db.getUserByEmail(curr_email);
+    console.log(raktar_id, aru_id, mennyiseg, curr_role, curr_email);
+
     if(curr_role !== 'ADMIN' && raktar_id != user.raktar_id){
         return res.redirect(`viewRaktar?id=${raktar_id}`);
     }
 
-    if(isNaN(db) || db <= 0){
+    if(isNaN(mennyiseg) || mennyiseg <= 0){
         if(req.headers.referer.split('/')[3] === 'sajatRaktar')
             return res.redirect(`sajatRaktar`);
         return res.redirect(`viewRaktar?id=${raktar_id}`);
     }
 
-    await db.addToKeszlet(raktar_id, aru_id,db);
+    await db.addToKeszlet(raktar_id, aru_id,mennyiseg);
     if(req.headers.referer.split('/')[3] === 'sajatRaktar')
         return res.redirect(`sajatRaktar`);
 
@@ -340,6 +343,7 @@ router.post("/addToKeszlet", auth, async (req, res) => {
 
 router.post("/editKeszlet", auth, async (req, res) => {
     let {raktar_id, aru_id, mennyiseg, curr_email, curr_role} = req.body; 
+
     const user = await db.getUserByEmail(curr_email);
 
     if(curr_role !== 'ADMIN' && raktar_id != user.raktar_id){
@@ -413,17 +417,22 @@ router.post("/deleteAru", auth, async (req, res) => {
 });
 
 router.get("/szallitmany", auth, async (req, res) => {
-    let {curr_role} = req.body;
+    let {curr_role, curr_email} = req.body;
     let raktar; 
-    const szallitmany = await db.getAllSzallitmany();
+    let szallitmany;
+    const user = await db.getUserByEmail(curr_email);
     if(curr_role === 'ADMIN'){
         raktar = await db.getAllRaktar();
-
+        szallitmany = await db.getAllSzallitmany();
+    }else{
+        szallitmany = await db.getAllSzallitmanyByRaktarId(user.raktar_id);
     }
+
     let szerkeszt = req.query.szerkeszt;
     let id = req.query.id;
 
     return res.render('szallitmany',{
+        honnan_id: user.raktar_id,
         curr_role: curr_role,
         raktar: raktar,
         szallitmany: szallitmany,
@@ -443,6 +452,7 @@ router.get("/ujSzallitmany", auth, async (req, res) => {
 
     const raktar = await db.getAllRaktar();
     const aruk = await db.getAllAruByRaktarId(honnan_id);
+    const honnan = await db.getRaktarNameById(honnan_id);
 
     let rakomany_aru;
 
@@ -463,6 +473,7 @@ router.get("/ujSzallitmany", auth, async (req, res) => {
         }
     }
     return res.render('ujSzallitmany', {
+        honnan: honnan,
         honnan_id: honnan_id,
         rakomany: rakomany_aru,
         curr_role: curr_role, 
@@ -473,6 +484,8 @@ router.get("/ujSzallitmany", auth, async (req, res) => {
 
 });
 
+//const editKeszlet = async (raktar_id, aru_id, mennyiseg) => {
+
 router.post("/ujSzallitmany", auth, async (req, res) => {
     let {curr_role, curr_email, honnan_id, hova_id} = req.body;
     let {rakomany} = req.cookies;
@@ -481,7 +494,16 @@ router.post("/ujSzallitmany", auth, async (req, res) => {
     await db.addSzallitmany(time, curr_email, honnan_id, hova_id);
     const szallitmany_id = (await db.getAllSzallitmanyIdByDate(time)).szallitmany_id;
     for(i of Object.keys(rakomany)){
-        db.addToRakomany(szallitmany_id, i, rakomany[i]);
+        let mennyiseg = await db.getAruMennyisegByRaktarIdAruId(honnan_id, i);
+        await db.editKeszlet(honnan_id, i, mennyiseg-rakomany[i]);
+
+        let mennyiseg2 = await db.getAruMennyisegByRaktarIdAruId(hova_id, i);
+        if(mennyiseg2 > 0)
+            await db.editKeszlet(hova_id, i, mennyiseg2+rakomany[i]);
+        else
+            await db.addToKeszlet(hova_id, i, rakomany[i]);
+        
+        await db.addToRakomany(szallitmany_id, i, rakomany[i]);
     }
     res.cookie("rakomany", '', {
         httpOnly: true
@@ -595,6 +617,12 @@ router.get("/viewRakomany", auth, async (req, res) => {
         rakomany: rakomany,
         aruk: aruk
     });
+
+});
+
+router.get('/statok', auth, async (req, res) => {
+
+    res.render('statok');
 
 });
 

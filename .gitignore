@@ -1,3 +1,4 @@
 *.pdf
 .ds_store
 */.ds_store
+~*

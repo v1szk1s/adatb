@@ -37,7 +37,7 @@ CREATE TABLE `aru` (
   `suly` float NOT NULL,
   `ar` int NOT NULL,
   PRIMARY KEY (`aru_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `aru` (
 
 LOCK TABLES `aru` WRITE;
 /*!40000 ALTER TABLE `aru` DISABLE KEYS */;
-INSERT INTO `aru` VALUES (1,'Sajt',0.3,1,4000),(3,'Liszt',1,1,1000),(5,'Tej',1,1,899),(6,'Kenyér',1,2,1799),(7,'Víz',0.001,1,300),(8,'Sampon',0.0007,1,3000),(13,'Asztal',0.01,10,30000),(14,'Mosógép',1.25,120,180000),(15,'Szárító',1.3,100,175000),(16,'Szék',0.05,7,14899),(17,'Tükör',0.01,15,23890),(18,'Lámpa',0.016,2,6890),(19,'ak-47',0.0036,10.5,178000),(20,'Macbook m1 2021',0.001,1.41,480000);
+INSERT INTO `aru` VALUES (1,'Sajt',0.3,1,4000),(3,'Liszt',1,1,1000),(5,'Tej',1,1,899),(6,'Kenyér',1,2,1799),(7,'Víz',0.001,1,300),(8,'Sampon',0.0007,1,3000),(13,'Asztal',0.01,10,30000),(14,'Mosógép',1.25,120,180000),(15,'Szárító',1.3,100,175000),(16,'Szék',0.05,7,14899),(17,'Tükör',0.01,15,23890),(18,'Lámpa',0.016,2,6890),(19,'ak-47',0.0036,10.5,178000),(20,'Macbook m1 2021',0.001,1.41,480000),(21,'Ágy',2,34,120000),(22,'Elefánt',3,2500,30000),(23,'Hajó',3,1500,200000),(24,'Csempe',1,300,40000),(25,'Vonat',40,45000,450000);
 /*!40000 ALTER TABLE `aru` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +97,7 @@ CREATE TABLE `keszlet` (
   KEY `raktar_id` (`raktar_id`),
   CONSTRAINT `keszlet_ibfk_1` FOREIGN KEY (`aru_id`) REFERENCES `aru` (`aru_id`),
   CONSTRAINT `keszlet_ibfk_2` FOREIGN KEY (`raktar_id`) REFERENCES `raktar` (`raktar_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `keszlet` (
 
 LOCK TABLES `keszlet` WRITE;
 /*!40000 ALTER TABLE `keszlet` DISABLE KEYS */;
-INSERT INTO `keszlet` VALUES (29,50,3,1),(30,1215,3,5),(34,600,16,1),(35,323,16,5),(36,3255,16,7),(37,800,3,20),(38,2222,3,15),(39,2121,7,16),(40,231,7,15),(41,999,7,18),(42,233232,7,7),(43,23232,7,17),(44,2332,12,18),(45,5765,12,6),(46,912,12,7),(47,345,12,16),(48,23,12,8),(49,345,12,13),(50,345,12,17),(51,258,13,13),(52,45,13,14),(53,54,13,17),(54,455454,14,19),(55,23432,15,1),(56,324,15,5),(57,324,15,3),(58,456,15,6),(59,567,15,7),(60,3456,15,8),(61,657,15,13),(62,346,15,16),(63,4564,15,19),(64,456456,15,20);
+INSERT INTO `keszlet` VALUES (29,44,3,1),(30,1215,3,5),(34,600,16,1),(35,323,16,5),(36,3255,16,7),(37,800,3,20),(38,2216,3,15),(39,2121,7,16),(40,233,7,15),(41,999,7,18),(42,233232,7,7),(43,23232,7,17),(44,2332,12,18),(45,5765,12,6),(46,912,12,7),(47,345,12,16),(48,23,12,8),(49,345,12,13),(50,345,12,17),(51,258,13,13),(52,45,13,14),(53,54,13,17),(54,455454,14,19),(55,23432,15,1),(56,324,15,5),(57,324,15,3),(58,456,15,6),(59,567,15,7),(60,3456,15,8),(61,657,15,13),(62,346,15,16),(63,4564,15,19),(64,456456,15,20),(65,2,7,1);
 /*!40000 ALTER TABLE `keszlet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +127,7 @@ CREATE TABLE `rakomany` (
   KEY `aru_id` (`aru_id`),
   CONSTRAINT `rakomany_ibfk_1` FOREIGN KEY (`szallitmany_id`) REFERENCES `szallitmany` (`szallitmany_id`),
   CONSTRAINT `rakomany_ibfk_2` FOREIGN KEY (`aru_id`) REFERENCES `aru` (`aru_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `rakomany` (
 
 LOCK TABLES `rakomany` WRITE;
 /*!40000 ALTER TABLE `rakomany` DISABLE KEYS */;
-INSERT INTO `rakomany` VALUES (19,21,1,4),(22,22,13,5),(23,22,14,1),(24,23,20,444),(25,24,19,999);
+INSERT INTO `rakomany` VALUES (19,21,1,4),(22,22,13,5),(23,22,14,1),(24,23,20,444),(25,24,19,999),(26,25,15,1),(27,25,18,1),(28,26,13,1),(29,26,16,1),(37,35,15,4),(38,36,15,2),(39,37,15,2),(40,38,15,2),(41,39,15,2),(42,41,1,2);
 /*!40000 ALTER TABLE `rakomany` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,7 +153,7 @@ CREATE TABLE `raktar` (
   `varos` varchar(100) NOT NULL,
   `utca` varchar(100) NOT NULL,
   PRIMARY KEY (`raktar_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -162,7 +162,7 @@ CREATE TABLE `raktar` (
 
 LOCK TABLES `raktar` WRITE;
 /*!40000 ALTER TABLE `raktar` DISABLE KEYS */;
-INSERT INTO `raktar` VALUES (3,4330,'Békésszentandrás','Hír utca 5.'),(7,5500,'Szeged','Űr utca 45.'),(12,3487,'Szarvas','Hársfa utca'),(13,1408,'Csabacsűd','Fenyő utca 6.'),(14,2222,'Sződ','Galamb utca 42.'),(15,7845,'Budapest','Vár utca 1.'),(16,3776,'Győr','Mészáros Lőrinc utca 3.');
+INSERT INTO `raktar` VALUES (3,4330,'Békésszentandrás','Hír utca 5.'),(7,5500,'Szeged','Űr utca 45.'),(12,3487,'Szarvas','Hársfa utca'),(13,1408,'Csabacsűd','Fenyő utca 6.'),(14,2222,'Sződ','Galamb utca 42.'),(15,7845,'Budapest','Vár utca 1.'),(16,3776,'Győr','Mészáros Lőrinc utca 3.'),(17,2500,'Békéscsaba','Hős utca 13.'),(18,1675,'Nagyberény','Benka utca 1.'),(19,4555,'Siófok','Balaton utca 73.');
 /*!40000 ALTER TABLE `raktar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,7 +186,7 @@ CREATE TABLE `szallitmany` (
   CONSTRAINT `szallitmany_ibfk_1` FOREIGN KEY (`felhasznalo_id`) REFERENCES `felhasznalo` (`felhasznalo_id`),
   CONSTRAINT `szallitmany_ibfk_2` FOREIGN KEY (`honnan_raktar_id`) REFERENCES `raktar` (`raktar_id`),
   CONSTRAINT `szallitmany_ibfk_3` FOREIGN KEY (`hova_raktar_id`) REFERENCES `raktar` (`raktar_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -195,7 +195,7 @@ CREATE TABLE `szallitmany` (
 
 LOCK TABLES `szallitmany` WRITE;
 /*!40000 ALTER TABLE `szallitmany` DISABLE KEYS */;
-INSERT INTO `szallitmany` VALUES (21,1,'2022-11-27 14:22:11',3,15),(22,1,'2022-11-27 15:24:53',13,3),(23,1,'2022-11-27 15:25:08',15,3),(24,1,'2022-11-27 15:25:23',14,3);
+INSERT INTO `szallitmany` VALUES (21,1,'2022-11-27 14:22:11',3,15),(22,1,'2022-11-27 15:24:53',13,3),(23,1,'2022-11-27 15:25:08',15,3),(24,1,'2022-11-27 15:25:23',14,3),(25,1,'2022-11-27 16:48:10',7,3),(26,1,'2022-11-27 16:48:54',12,3),(35,1,'2022-11-27 17:09:05',3,7),(36,1,'2022-11-27 17:10:45',3,3),(37,1,'2022-11-27 17:11:44',3,7),(38,1,'2022-11-27 17:13:05',3,3),(39,1,'2022-11-27 17:13:28',3,7),(40,1,'2022-11-27 17:14:12',3,7),(41,1,'2022-11-27 17:30:28',3,7);
 /*!40000 ALTER TABLE `szallitmany` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -208,4 +208,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-27 14:26:10
+-- Dump completed on 2022-11-27 17:12:51
